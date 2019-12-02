@@ -6,8 +6,8 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 
-public class CalcFrame extends JPanel {
-	public CalcFrame() {
+public class CalcPanel extends JPanel {
+	public CalcPanel() {
 		this.setName("Distance Calculator");
 		this.setSize(1500, 1500);
 		// this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -199,7 +199,7 @@ public class CalcFrame extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
-		CalcFrame p = new CalcFrame();
+		CalcPanel p = new CalcPanel();
 		jf.add(p);
 		jf.setTitle("Calculate Distances");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
