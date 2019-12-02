@@ -29,6 +29,15 @@ public class DistanceCalculator {
 
 	}
 
+	public DistanceCalculator(String[] names) {
+		this.names = names;
+		listNames = new ArrayList<String>(Arrays.asList(names));
+		map = new HashMap<>();
+		for (int i = 0; i < listNames.size(); i++) {
+			map.put(listNames.get(i), i);
+		}
+	}
+
 	public double calcDistance(String a, String b) {
 		double distance;
 		if (a.length() != b.length()) {
@@ -70,30 +79,29 @@ public class DistanceCalculator {
 	}
 
 	public double[][] newMatrix(double[][] original) {
-		double[][] matrix = new double[list.size()][listNames.size()];
-		for (int i = 0; i < list.size(); i++) {
+		double[][] matrix = new double[listNames.size()][listNames.size()];
+		for (int i = 0; i < listNames.size(); i++) {
 			for (int j = 0; j < listNames.size(); j++) {
 
 				if (i == j) {
 					matrix[i][j] = -1;
 				} else if (j == 0) {
-					//System.out.println("j: " + listNames.get(j));
-					//System.out.println("i: " + listNames.get(i));
-					//System.out.println("remX: " +remX + "  remY: " + remY + " i: " + i);
-					//System.out.println(map.get(listNames.get(i)));
-					//System.out.println(map.get(remX));
-					
-					double first =0;
-					double second =0;
+					// System.out.println("j: " + listNames.get(j));
+					// System.out.println("i: " + listNames.get(i));
+					// System.out.println("remX: " +remX + " remY: " + remY + " i: " + i);
+					// System.out.println(map.get(listNames.get(i)));
+					// System.out.println(map.get(remX));
+
+					double first = 0;
+					double second = 0;
 					if (original[map.get(listNames.get(i))][map.get(remX)] == -1) {
 						first = (original[map.get(remX)][map.get(listNames.get(i))]);
 						second = (original[map.get(remY)][map.get(listNames.get(i))]);
-					}
-					else {
+					} else {
 						first = (original[map.get(listNames.get(i))][map.get(remX)]);
 						second = (original[map.get(listNames.get(i))][map.get(remY)]);
 					}
-					
+
 					matrix[j][i] = (first + second) / 2;
 					matrix[i][j] = -1;
 				} else {
@@ -102,8 +110,7 @@ public class DistanceCalculator {
 					matrix[j][i] = original[b][a];
 					matrix[i][j] = -1;
 				}
-				
-			
+
 			}
 		}
 		return matrix;
@@ -132,7 +139,8 @@ public class DistanceCalculator {
 				}
 			}
 		}
-		matches = "Match: " + listNames.get(x) + "," + listNames.get(y) + " | Distance: " + String.format(" %.1f ", min) + "\n";
+		matches = "Match: " + listNames.get(x) + "," + listNames.get(y) + " | Distance: " + String.format(" %.1f ", min)
+				+ "\n";
 		removeShortest(x, y, posX, posY);
 		return matches;
 
@@ -143,22 +151,22 @@ public class DistanceCalculator {
 		if (x < y) {
 			y = y - 1;
 		}
-		list.remove(x);
-		list.remove(y);
+		// list.remove(x);
+		// list.remove(y);
 		listNames.remove(x);
 		listNames.remove(y);
 
 		remX = a;
 		remY = b;
-		
+
 		System.out.println(a + " and " + b);
 
-		//map.remove(a);
-		//map.remove(b);
+		// map.remove(a);
+		// map.remove(b);
 
 		String comb = a + "" + b;
 		listNames.add(0, comb);
-		list.add(0, comb);
+		// list.add(0, comb);
 		map.put(comb, listNames.size());
 
 	}
@@ -192,17 +200,17 @@ public class DistanceCalculator {
 	public void printMatrix(double[][] mat) {
 		System.out.print("    ");
 		for (String s : listNames) {
-			String f = String.format("%1$"+6+ "s", s);
+			String f = String.format("%1$" + 6 + "s", s);
 			System.out.print(f);
 		}
 		System.out.println();
 		for (int i = 0; i < mat.length; i++) {
-			System.out.print(String.format("%1$"+4+ "s",listNames.get(i)) + "  ");
+			System.out.print(String.format("%1$" + 4 + "s", listNames.get(i)) + "  ");
 			for (int j = 0; j < mat[0].length; j++) {
 				if (mat[i][j] < 0) {
 					System.out.print("----- ");
 				} else {
-					String s = String.format("$$%.1f ", mat[i][j]);
+					String s = String.format("%.1f ", mat[i][j]);
 					System.out.print(s + " ");
 				}
 
@@ -215,9 +223,20 @@ public class DistanceCalculator {
 		String[] taxa = { "ATGGCTATTCTTATAGTACG", "ATCGCTAGTCTTATATTACA", "TTCACTAGACCTGTGGTCCA",
 				"TTGACCAGACCTGTGGTCCG", "TTGACCAGTTCTCTAGTTCG" };
 		String[] names = { "A", "B", "C", "D", "E" };
+
 		DistanceCalculator dc = new DistanceCalculator(taxa, names);
 		double[][] mat = dc.distanceMatrix();
 		dc.performCalc(mat);
+
+		double[] a = { -1, 20, 50, 45, 40 };
+		double[] b = { -1, -1, 40, 55, 50 };
+		double[] c = { -1, -1, -1, 15, 40 };
+		double[] d = { -1, -1, -1, -1, 25 };
+		double[] e = { -1, -1, -1, -1, -1 };
+
+		double[][] test = { a, b, c, d, e };
+		DistanceCalculator dctest = new DistanceCalculator(names);
+		dctest.performCalc(test);
 
 	}
 
