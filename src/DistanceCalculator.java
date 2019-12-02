@@ -1,25 +1,29 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*; 
 
 /*
  * reference lecture slide for trees: http://www.bioinfo.rpi.edu/bystrc/courses/biol4540/lecture.pdf
  */
+
+/**
+ * Distance Calculator class
+ * calculates and performs distance matrix on set of either taxa/names or pre-existing distance matrix
+ * @author anhthy ho// december 2019 for cs123a bioinformatics at sjsu
+ *
+ */
 public class DistanceCalculator {
-	private String[] taxa;
-	private String[] names;
 	private ArrayList<String> list;
 	private ArrayList<String> listNames;
 	double[][] original;
 	private String remX;
 	private String remY;
-
 	private HashMap<String, Integer> map;
-
+	
+	/**
+	 * 1/2 distancecalculators - this is for taxa/name input
+	 * @param taxa list of taxa to calculate distances using differences
+	 * @param names list of names of species/items
+	 */
 	public DistanceCalculator(String[] taxa, String[] names) {
-		this.taxa = taxa;
-		this.names = names;
 		list = new ArrayList<String>(Arrays.asList(taxa));
 		listNames = new ArrayList<String>(Arrays.asList(names));
 		map = new HashMap<>();
@@ -29,8 +33,11 @@ public class DistanceCalculator {
 
 	}
 
+	/**
+	 * 2/2 distancecalculators - used for distance matrices only
+	 * @param names list of names of species/items
+	 */
 	public DistanceCalculator(String[] names) {
-		this.names = names;
 		listNames = new ArrayList<String>(Arrays.asList(names));
 		map = new HashMap<>();
 		for (int i = 0; i < listNames.size(); i++) {
@@ -38,6 +45,12 @@ public class DistanceCalculator {
 		}
 	}
 
+	/**
+	 * calculates distance between two taxa (gets differences between two taxa and div by length)
+	 * @param a first string (should be the distance row)
+	 * @param b second string (compared to string a)
+	 * @return double distance value between two strings
+	 */
 	public double calcDistance(String a, String b) {
 		double distance;
 		if (a.length() != b.length()) {
@@ -56,6 +69,12 @@ public class DistanceCalculator {
 		return distance * 100;
 	}
 
+	/**
+	 * calc jukes cantor method - optional
+	 * @param a first string
+	 * @param b second string
+	 * @return distance between two taxa strings 
+	 */
 	public double calcJukesCantor(String a, String b) {
 		double distance = calcDistance(a, b);
 		double d = (4.0 / 3) * distance;
@@ -63,6 +82,10 @@ public class DistanceCalculator {
 		return JCDistance;
 	}
 
+	/**
+	 * creates distance matrix from list of names/taxa
+	 * @return double array (distance matrix) of differences between names/taxa
+	 */
 	public double[][] distanceMatrix() {
 		double[][] matrix = new double[list.size()][listNames.size()];
 		for (int i = 0; i < list.size(); i++) {
@@ -78,6 +101,12 @@ public class DistanceCalculator {
 		return matrix;
 	}
 
+	/**
+	 * creates new distance matrix after shortest branch is removed
+	 * add new branch as the connector between branch to tree
+	 * @param original pre-deletion matrix to call for reference
+	 * @return new matrix of distances
+	 */
 	public double[][] newMatrix(double[][] original) {
 		double[][] matrix = new double[listNames.size()][listNames.size()];
 		for (int i = 0; i < listNames.size(); i++) {
@@ -117,6 +146,11 @@ public class DistanceCalculator {
 
 	}
 
+	/**
+	 * finds and returns the shortest branch connected
+	 * @param matrix searches through this matrix to find shortest branch
+	 * @return names of the shortest branches / items in that branch
+	 */
 	public String findShortest(double[][] matrix) {
 		String matches = "";
 		String posX = listNames.get(0);
@@ -146,6 +180,13 @@ public class DistanceCalculator {
 
 	}
 
+	/**
+	 * removes the shortest branch from the matrix and list of iterated names
+	 * @param x index of match 1
+	 * @param y index of match 2
+	 * @param a name of match 1
+	 * @param b name of match 2
+	 */
 	public void removeShortest(int x, int y, String a, String b) {
 		// System.out.println(x + " " + y );
 		if (x < y) {
@@ -171,6 +212,11 @@ public class DistanceCalculator {
 
 	}
 
+	/**
+	 * prints for error method if the map is empty
+	 * basically if there are no inputs
+	 * @param map list of items to calc dist. for
+	 */
 	public static void print(HashMap<String, Integer> map) {
 		if (map.isEmpty()) {
 			System.out.println("map is empty");
@@ -181,6 +227,11 @@ public class DistanceCalculator {
 		}
 	}
 
+	/**
+	 * performs the calculations by creating matrix, getting shortest, etc.,
+	 * will stop if the the matrix contains only one item
+	 * @param mat mat to run perform on
+	 */
 	public void performCalc(double[][] mat) {
 		System.out.println("-----------------------------------------------");
 		if (mat.length > 1) {
@@ -197,6 +248,10 @@ public class DistanceCalculator {
 		}
 	}
 
+	/**
+	 * prints matrix as strings for viewing purposes
+	 * @param mat matrix to print
+	 */
 	public void printMatrix(double[][] mat) {
 		System.out.print("    ");
 		for (String s : listNames) {
@@ -219,6 +274,9 @@ public class DistanceCalculator {
 		}
 	}
 
+	/**
+	 * test parameters - not used in the actual gui
+	 */
 	public static void main(String[] args) {
 		String[] taxa = { "ATGGCTATTCTTATAGTACG", "ATCGCTAGTCTTATATTACA", "TTCACTAGACCTGTGGTCCA",
 				"TTGACCAGACCTGTGGTCCG", "TTGACCAGTTCTCTAGTTCG" };

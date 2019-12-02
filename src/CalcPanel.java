@@ -6,15 +6,27 @@ import java.util.*;
 import java.io.*;
 import javax.swing.*;
 
+/**
+ * calc panel is the gui implementation of distance calculator
+ * this panel allows users to enter their own values and see the resulting distance matrices
+ * @author anhthy ho// december 2019 for cs123a bioinformatics at sjsu
+ *
+ */
 public class CalcPanel extends JPanel {
+	/**
+	 * calc panel constructor includes taxa entry panel, distance entry panel and result panel
+	 */
 	public CalcPanel() {
 		this.setName("Distance Calculator");
 		this.setSize(1500, 1500);
 		// this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		/*
+		 * start creation of panel components for taxa panel
+		 * includes name and input box, buttons to add and calculate distance 
+		 */
 		JButton taxa = new JButton("Add Taxa Entry");
-
 		JTextField name = new JTextField("Enter name");
 		JTextField input = new JTextField("Enter taxa");
 
@@ -42,6 +54,7 @@ public class CalcPanel extends JPanel {
 		descTaxa.setText("Enter name and taxa then click 'Add Taxa Entry'" + "\n"
 				+ "to add to list. Once done with taxa and name additions, \n"
 				+ "click 'Calculate Taxa Entry' to display matches and distances.");
+		descTaxa.setBackground(taxaColor);
 		taxaEntry.add(descTaxa);
 
 		JTextArea list = new JTextArea(5, 20);
@@ -66,6 +79,9 @@ public class CalcPanel extends JPanel {
 
 		taxaEntry.add(taxaInput);
 
+		/*
+		 * taxa button will add the inputs to lists and print in the added section 
+		 */
 		taxa.addActionListener(new ActionListener() {
 
 			@Override
@@ -76,7 +92,7 @@ public class CalcPanel extends JPanel {
 
 				tArray.add(i);
 				nArray.add(j);
-				list.append("name: " + j + " taxa: " + i + "\n");
+				list.append("\n" +"name: " + j + " taxa: " + i);
 
 				input.setText("");
 				name.setText("");
@@ -84,6 +100,10 @@ public class CalcPanel extends JPanel {
 
 		});
 
+		/**
+		 * calc taxa using inputs
+		 * only for taxa entry
+		 */
 		JButton calculateTaxa = new JButton("Calculate Taxa Entry");
 		calculateTaxa.addActionListener(new ActionListener() {
 
@@ -101,12 +121,64 @@ public class CalcPanel extends JPanel {
 				DistanceCalculator dc = new DistanceCalculator(t, n);
 				double[][] mat = dc.distanceMatrix();
 				dc.performCalc(mat);
+				
+				tArray.clear();
+				nArray.clear();
+				list.setText("");
+				
+			}
+
+		});
+		
+		JButton clear = new JButton("Clear List");
+		clear.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (tArray.size()>=1){
+					tArray.clear();
+					nArray.clear();
+					list.setText("");
+				}
+				else {
+					list.setText("There are no items, cannot clear.");
+				}
+			}
+
+		});
+		
+		JButton removeLatest = new JButton("Remove Last Entry");
+		removeLatest.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (tArray.size()>1) {
+					tArray.remove(tArray.size()-1);
+					nArray.remove(tArray.size()-1);
+					list.setText(list.getText().substring(0,list.getText().lastIndexOf("\n")));
+				}
+				else if (tArray.size()==1) {
+					list.setText("Cannot remove as there is only one item, please clear the list");
+				}
+				else {
+					list.setText("The list is empty, nothing to remove");
+				}
 			}
 
 		});
 
-		taxaEntry.add(calculateTaxa);
+		JPanel taxaButtons = new JPanel(); 
+		taxaButtons.setBackground(taxaColor);
+		taxaButtons.add(clear);
+		taxaButtons.add(removeLatest);
+		taxaButtons.add(calculateTaxa);
+		taxaEntry.add(taxaButtons);
 
+		/*
+		 * begins creation of distance entry panel
+		 * includes name and distance box, buttons to add and calculate distance 
+		 */
 		JButton distances = new JButton("Add Distance Entry");
 		JTextField dName = new JTextField("");
 		JTextField dDistances = new JTextField("");
@@ -143,6 +215,9 @@ public class CalcPanel extends JPanel {
 
 		distEntry.add(distInput);
 
+		/*
+		 * creates array to add distance into and names
+		 */
 		distances.addActionListener(new ActionListener() {
 
 			@Override
@@ -158,7 +233,7 @@ public class CalcPanel extends JPanel {
 					db[k] = Double.parseDouble(sp[k]);
 				dDArray.add(db);
 				dNArray.add(j);
-				dList.append("name: " + j + " distances: " + i + "\n");
+				dList.append("\n" + "name: " + j + " distances: " + i);
 
 				dName.setText("");
 				dDistances.setText("");
@@ -166,6 +241,10 @@ public class CalcPanel extends JPanel {
 
 		});
 
+		/*
+		 * calls on distancecalculator to perform cal
+		 * creates double matrix 
+		 */
 		JButton calculateDistances = new JButton("Calculate Distance Entry");
 		calculateDistances.addActionListener(new ActionListener() {
 
@@ -182,10 +261,59 @@ public class CalcPanel extends JPanel {
 
 				DistanceCalculator dctest = new DistanceCalculator(dNames);
 				dctest.performCalc(distances);
+				
+				dDArray.clear();
+				dNArray.clear();
+				dList.setText("");
 			}
 		});
 
-		distEntry.add(calculateDistances);
+		
+		
+	
+		JButton clearD = new JButton("Clear List");
+		clearD.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (dDArray.size()>=1){
+					dDArray.clear();
+					dNArray.clear();
+					dList.setText("");
+				}
+				else {
+					dList.setText("There are no items, cannot clear.");
+				}
+			}
+
+		});
+		
+		JButton removeLatestD = new JButton("Remove Last Entry");
+		removeLatestD.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (dDArray.size()>1) {
+					dDArray.remove(dDArray.size()-1);
+					dNArray.remove(dNArray.size()-1);
+					dList.setText(dList.getText().substring(0,dList.getText().lastIndexOf("\n")));
+				}
+				else if (dDArray.size()==1) {
+					dList.setText("Cannot remove as there is only one item, please clear the list");
+				}
+				else {
+					dList.setText("The list is empty, nothing to remove");
+				}
+				
+			}
+
+		});
+
+		JPanel buttonsD = new JPanel(); 
+		buttonsD.add(clearD);
+		buttonsD.add(removeLatestD);
+		buttonsD.add(calculateDistances); 
+		distEntry.add(buttonsD);
 
 		JPanel entries = new JPanel();
 		entries.setLayout(new BoxLayout(entries, BoxLayout.X_AXIS));
