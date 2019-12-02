@@ -17,6 +17,7 @@ public class DistanceCalculator {
 	private String remX;
 	private String remY;
 	private HashMap<String, Integer> map;
+	private ArrayList<String> res = new ArrayList<>();  
 	
 	/**
 	 * 1/2 distancecalculators - this is for taxa/name input
@@ -244,6 +245,7 @@ public class DistanceCalculator {
 			printMatrix(mat);
 			String matches = findShortest(mat);
 			System.out.println(matches);
+			res.add(matches); 
 			performCalc(newMatrix(mat));
 		}
 	}
@@ -272,6 +274,10 @@ public class DistanceCalculator {
 			}
 			System.out.println();
 		}
+	}
+	
+	public ArrayList<String> getBranches(){
+		return res; 
 	}
 
 	/**

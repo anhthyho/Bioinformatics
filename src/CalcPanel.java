@@ -57,8 +57,12 @@ public class CalcPanel extends JPanel {
 		descTaxa.setBackground(taxaColor);
 		taxaEntry.add(descTaxa);
 
+		
+		
 		JTextArea list = new JTextArea(5, 20);
 		Color gray = Color.decode("#BBBEAE");
+		JScrollPane sp2 = new JScrollPane(list);
+		sp2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		list.setBackground(gray);
 		JLabel lDist = new JLabel("Name and Taxa");
 		// taxaEntry.add(list);
@@ -73,7 +77,7 @@ public class CalcPanel extends JPanel {
 		taxaInput.add(input);
 		taxaInput.add(taxa);
 		taxaInput.add(lDist);
-		taxaInput.add(list);
+		taxaInput.add(sp2);
 
 		taxaInput.setBackground(taxaColor);
 
@@ -124,7 +128,14 @@ public class CalcPanel extends JPanel {
 				
 				tArray.clear();
 				nArray.clear();
+				res.append(list.getText());
 				list.setText("");
+				
+				res.append("\n");
+				ArrayList<String> branches = dc.getBranches(); 
+				for (String s: branches) {
+					res.append(s);
+				}
 				
 			}
 
@@ -199,6 +210,9 @@ public class CalcPanel extends JPanel {
 		JTextArea dList = new JTextArea(5, 20);
 		JLabel ndDist = new JLabel("Name and Distances");
 		// taxaEntry.add(list);
+		
+		JScrollPane sp3 = new JScrollPane(dList);
+		sp3.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		JLabel namePrompt = new JLabel("Add Name");
 		JLabel distancePrompt = new JLabel("Add Distances");
@@ -211,7 +225,7 @@ public class CalcPanel extends JPanel {
 		distInput.add(dDistances);
 		distInput.add(distances);
 		distInput.add(ndDist);
-		distInput.add(dList);
+		distInput.add(sp3);
 
 		distEntry.add(distInput);
 
@@ -264,7 +278,14 @@ public class CalcPanel extends JPanel {
 				
 				dDArray.clear();
 				dNArray.clear();
+				res.append(dList.getText());
 				dList.setText("");
+				
+				res.append("\n");
+				ArrayList<String> branches = dctest.getBranches(); 
+				for (String s: branches) {
+					res.append(s);
+				}
 			}
 		});
 
@@ -324,6 +345,7 @@ public class CalcPanel extends JPanel {
 
 		setVisible(true);
 	}
+	
 
 	public static void main(String[] args) {
 		JFrame jf = new JFrame();
